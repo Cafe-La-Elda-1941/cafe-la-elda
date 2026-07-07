@@ -9,6 +9,8 @@ import { CombosSection } from "@/components/sections/CombosSection";
 import { RegalosCorporativosSection } from "@/components/sections/RegalosCorporativosSection";
 import { OrigenSection } from "@/components/sections/OrigenSection";
 import { ProcesoSection } from "@/components/sections/ProcesoSection";
+import { ProcesoGalletasSection } from "@/components/sections/ProcesoGalletasSection";
+import { ProcesoChocoffeeSection } from "@/components/sections/ProcesoChocoffeeSection";
 import { TestimoniosSection } from "@/components/sections/TestimoniosSection";
 import { AliadosSection } from "@/components/sections/AliadosSection";
 import { ContactoSection } from "@/components/sections/ContactoSection";
@@ -26,6 +28,8 @@ export default function HomePage() {
       <RegalosCorporativosSection />
       <OrigenSection />
       <ProcesoSection />
+      <ProcesoGalletasSection />
+      <ProcesoChocoffeeSection />
       <TestimoniosSection />
       <AliadosSection />
       <ContactoSection products={serializedProducts} />
