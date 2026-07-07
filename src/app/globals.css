@@ -1,26 +1,132 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-verde: #1a6b2f;
+  --color-verde-claro: #2d9142;
+  --color-amarillo: #f5c518;
+  --color-amarillo-oscuro: #d4a010;
+  --color-rojo: #c0392b;
+  --color-cafe-oscuro: #2c1810;
+  --color-cafe-medio: #6b3a2a;
+  --color-cafe-claro: #a0614a;
+  --color-crema: #faf4e8;
+  --color-crema-oscuro: #f0e6d0;
+  --color-blanco: #ffffff;
+  --color-texto: #1a0f08;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-crema);
+  color: var(--color-texto);
+  overflow-x: hidden;
 }
+
+/* ─── FONT FAMILIES ─── */
+.font-playfair { font-family: var(--font-playfair), 'Playfair Display', serif; }
+.font-cormorant { font-family: var(--font-cormorant), 'Cormorant Garamond', serif; }
+.font-bebas { font-family: var(--font-bebas), 'Bebas Neue', sans-serif; }
+.font-josefin { font-family: var(--font-josefin), 'Josefin Sans', sans-serif; }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slowRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+@keyframes pulseWa {
+  0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4); }
+  50% { box-shadow: 0 4px 40px rgba(37,211,102,0.7); }
+}
+
+/* ─── KEN BURNS CINEMÁTICO ─── */
+@keyframes kenburns-1 {
+  0%   { transform: scale(1.08) translate(0%, 0%); }
+  100% { transform: scale(1.22) translate(-3%, -2%); }
+}
+@keyframes kenburns-2 {
+  0%   { transform: scale(1.18) translate(2%, 1%); }
+  100% { transform: scale(1.05) translate(-1%, -2%); }
+}
+@keyframes kenburns-3 {
+  0%   { transform: scale(1.1) translate(-2%, 1%); }
+  100% { transform: scale(1.24) translate(2%, -2%); }
+}
+@keyframes kenburns-4 {
+  0%   { transform: scale(1.06) translate(1%, -1%); }
+  100% { transform: scale(1.2) translate(-2%, 2%); }
+}
+@keyframes kenburns-5 {
+  0%   { transform: scale(1.2) translate(-1%, 2%); }
+  100% { transform: scale(1.08) translate(2%, -1%); }
+}
+
+/* Zoom suave centrado (sin paneo) para imágenes que deben verse completas */
+@keyframes kenburns-center {
+  0%   { transform: scale(1.02); }
+  100% { transform: scale(1.12); }
+}
+
+/* ─── ENTRADA SUAVE DE SLIDE ACTIVO ─── */
+@keyframes slideReveal {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ─── BARRA DE PROGRESO DEL CARRUSEL ─── */
+@keyframes progressFill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.animate-fade-in-up { animation: fadeInUp 0.8s ease both; }
+.animate-fade-in-up-d1 { animation: fadeInUp 0.8s 0.2s ease both; }
+.animate-fade-in-up-d2 { animation: fadeInUp 0.8s 0.3s ease both; }
+.animate-fade-in-up-d3 { animation: fadeInUp 0.8s 0.4s ease both; }
+.animate-fade-in-up-d4 { animation: fadeInUp 0.8s 0.5s ease both; }
+.animate-fade-in { animation: fadeIn 1.5s ease both; }
+.animate-slow-rotate { animation: slowRotate 30s linear infinite; }
+.animate-bounce-scroll { animation: bounce 2s ease infinite; }
+.animate-pulse-wa { animation: pulseWa 3s ease infinite; }
+
+/* ─── CLIP PATH BUTTON ─── */
+.btn-clip {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+/* ─── QUITAR OUTLINE VERDE DE FOCO DEL NAVEGADOR (TODOS LOS ELEMENTOS) ─── */
+*,
+*::before,
+*::after {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+*:focus,
+*:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ─── SCROLLBAR DARK ─── */
+.dark-scrollbar::-webkit-scrollbar { width: 6px; }
+.dark-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.dark-scrollbar::-webkit-scrollbar-thumb { background: rgba(250,244,232,0.15); border-radius: 3px; }
