@@ -22,7 +22,7 @@ export interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, "quantity">) => void;
+  addItem: (item: Omit<CartItem, "quantity"> & { quantity?: number }) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -75,20 +75,33 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, mounted]);
 
-  const addItem = useCallback((newItem: Omit<CartItem, "quantity">) => {
-    setItems((prev) => {
-      const existing = prev.find((item) => item.id === newItem.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === newItem.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { ...newItem, quantity: 1 }];
-    });
-    setCartOpen(true);
-  }, []);
+  const addItem = useCallback(
+    (newItem: Omit<CartItem, "quantity"> & { quantity?: number }) => {
+      const requestedQty = newItem.quantity ?? 1;
+      setItems((prev) => {
+        const existing = prev.find((item) => item.id === newItem.id);
+        if (existing) {
+          // Si ya existe, sumamos cantidades (respeta minQuantity del item)
+          const newQty = existing.quantity + requestedQty;
+          return prev.map((item) =>
+            item.id === newItem.id
+              ? {
+                  ...item,
+                  quantity: newQty,
+                  // Preservar minQuantity si el nuevo item lo trae
+                  minQuantity: newItem.minQuantity ?? existing.minQuantity,
+                }
+              : item
+          );
+        }
+        // Separar quantity del resto antes de crear el item
+        const { quantity: _omit, ...rest } = newItem;
+        return [...prev, { ...rest, quantity: requestedQty }];
+      });
+      setCartOpen(true);
+    },
+    []
+  );
 
   const removeItem = useCallback((id: string) => {
     setItems((prev) => prev.filter((item) => item.id !== id));

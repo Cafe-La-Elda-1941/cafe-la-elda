@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { useCart } from "@/components/cart/CartProvider";
 
 interface PaqueteCorporativo {
   id: string;
@@ -125,10 +126,12 @@ function formatPrice(price: number): string {
 }
 
 export function RegalosCorporativosSection() {
+  const { addItem } = useCart();
   const [paqueteSeleccionado, setPaqueteSeleccionado] = useState<string | null>(null);
   const [cantidad, setCantidad] = useState<number>(100);
   const [error, setError] = useState<string>("");
   const [mostrarCotizacion, setMostrarCotizacion] = useState<boolean>(false);
+  const [agregadoCarrito, setAgregadoCarrito] = useState<boolean>(false);
 
   const paqueteActual = paquetes.find((p) => p.id === paqueteSeleccionado);
 
@@ -165,6 +168,27 @@ export function RegalosCorporativosSection() {
       setError("");
       setCantidad(num);
     }
+  }
+
+  function handleAgregarCarrito() {
+    if (!paqueteActual) return;
+    const minimo = paqueteActual.cantidadMinima;
+    if (cantidad < minimo) {
+      setError(`⚠️ La cantidad mínima para este paquete es de ${minimo} unidades.`);
+      setCantidad(minimo);
+      return;
+    }
+    addItem({
+      id: `corp-${paqueteActual.id}`,
+      name: `Paquete Corporativo ${paqueteActual.nombre}`,
+      price: paqueteActual.precioUnidad,
+      weight: `${paqueteActual.contenido.join(", ")} · Nivel ${paqueteActual.nivel}`,
+      image: paqueteActual.imagen,
+      minQuantity: minimo,
+      quantity: cantidad,
+    });
+    setAgregadoCarrito(true);
+    setTimeout(() => setAgregadoCarrito(false), 3000);
   }
 
   const total = paqueteActual ? paqueteActual.precioUnidad * cantidad : 0;
@@ -554,22 +578,41 @@ export function RegalosCorporativosSection() {
                   {/* Nota y botón */}
                   <div className="mt-6 text-center">
                     <p className="text-[11px] text-crema/40 mb-4 font-josefin leading-relaxed max-w-md mx-auto">
-                      ℹ️ Los precios no incluyen envío ni personalización de empaque. Solicita tu
-                      cotización personalizada y te contactaremos en menos de 24 horas.
+                      ℹ️ Los precios no incluyen envío ni personalización de empaque. Las cantidades
+                      se pueden ajustar en el carrito sin bajar del mínimo de {paqueteActual.cantidadMinima} unidades.
                     </p>
-                    <a
-                      href={`https://wa.me/573135739799?text=${encodeURIComponent(
-                        `Hola, me interesa el Paquete ${paqueteActual.nombre} (Nivel ${paqueteActual.nivel}) para regalos corporativos. Quiero ${cantidad} unidades. Total estimado: ${formatPrice(
-                          totalConDescuento
-                        )}. ¿Me pueden dar más información?`
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-3 px-10 py-4 rounded-full bg-gradient-to-r from-amarillo-oscuro to-amarillo text-cafe-oscuro font-josefin font-bold text-[13px] tracking-[3px] uppercase transition-all duration-300 hover:shadow-2xl hover:shadow-amarillo/40 hover:scale-[1.03] active:scale-[0.98]"
+
+                    {/* Confirmación visual tras agregar */}
+                    {agregadoCarrito && (
+                      <div className="mb-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-verde/15 border border-verde-claro/40">
+                        <span className="text-verde-claro text-[12px] tracking-[2px] uppercase font-josefin font-bold">
+                          ✓ ¡{cantidad} unidades agregadas al carrito!
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Botón principal — Agregar al Carrito */}
+                    <button
+                      onClick={handleAgregarCarrito}
+                      className="inline-flex items-center gap-3 px-10 py-4 rounded-full bg-gradient-to-r from-amarillo-oscuro to-amarillo text-cafe-oscuro font-josefin font-bold text-[13px] tracking-[3px] uppercase transition-all duration-300 hover:shadow-2xl hover:shadow-amarillo/40 hover:scale-[1.03] active:scale-[0.98] border-none cursor-pointer"
                     >
-                      💼 Solicitar Cotización
+                      🛒 Agregar al Carrito
                       <span className="text-base">→</span>
-                    </a>
+                    </button>
+
+                    {/* Opción secundaria — Personalización por WhatsApp */}
+                    <div className="mt-5">
+                      <a
+                        href={`https://wa.me/3107109852?text=${encodeURIComponent(
+                          `Hola, me interesa el Paquete ${paqueteActual.nombre} (Nivel ${paqueteActual.nivel}) para regalos corporativos. Quiero ${cantidad} unidades con personalización de logo/empaque. ¿Me pueden dar más información?`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[11px] tracking-[2px] uppercase text-crema/40 font-josefin hover:text-amarillo transition-colors border-b border-crema/10 hover:border-amarillo/30 pb-0.5"
+                      >
+                        💼 ¿Personalización con logo de tu empresa? Cotiza aquí
+                      </a>
+                    </div>
                   </div>
                 </div>
               )}
