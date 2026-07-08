@@ -1,4 +1,14 @@
 import { prisma } from "@/lib/prisma";
+import { getProducts } from "@/lib/products";
+
+/**
+ * Mapa de precios de productos estáticos (de products.ts).
+ * Se construye una sola vez al cargar el módulo.
+ */
+const STATIC_PRODUCT_PRICES: Record<string, number> = {};
+for (const p of getProducts()) {
+  STATIC_PRODUCT_PRICES[p.id] = p.price;
+}
 
 /**
  * Precios oficiales de los combos (código estático).
@@ -42,9 +52,10 @@ export interface VerifiedLine extends IncomingLine {
 
 /**
  * Valida un carrito entrante contra las fuentes de verdad del servidor:
- *  - Productos de base de datos (por id)
+ *  - Productos estáticos (de products.ts)
  *  - Combos estáticos (por id combo-XX)
  *  - Corporativos estáticos (por id corp-XXX)
+ *  - Productos de base de datos (por id) — fallback
  *
  * Devuelve las líneas verificadas con el precio oficial y el total seguro.
  * Lanza Error si alguna línea no se puede verificar o la cantidad es inválida.
@@ -53,24 +64,29 @@ export async function verifyCart(
   items: IncomingLine[]
 ): Promise<{ lines: VerifiedLine[]; total: number }> {
   // 1. Separar ids de productos de BD vs estáticos
-  const staticIds = new Set<string>([
+  const allStaticIds = new Set<string>([
     ...Object.keys(COMBO_PRICES),
     ...Object.keys(CORP_PRICES),
+    ...Object.keys(STATIC_PRODUCT_PRICES),
   ]);
 
   const dbIds = items
-    .filter((it) => !staticIds.has(it.id))
+    .filter((it) => !allStaticIds.has(it.id))
     .map((it) => it.id);
 
-  // 2. Consultar precios reales en la base de datos
+  // 2. Consultar precios reales en la base de datos (solo para IDs no estáticos)
   const dbPriceMap = new Map<string, number>();
   if (dbIds.length > 0) {
-    const products = await prisma.product.findMany({
-      where: { id: { in: dbIds }, active: true },
-      select: { id: true, price: true },
-    });
-    for (const p of products) {
-      dbPriceMap.set(p.id, p.price);
+    try {
+      const products = await prisma.product.findMany({
+        where: { id: { in: dbIds }, active: true },
+        select: { id: true, price: true },
+      });
+      for (const p of products) {
+        dbPriceMap.set(p.id, p.price);
+      }
+    } catch {
+      // Si la BD no está disponible, solo usamos precios estáticos
     }
   }
 
@@ -89,6 +105,8 @@ export async function verifyCart(
       unitPrice = COMBO_PRICES[item.id];
     } else if (CORP_PRICES[item.id] !== undefined) {
       unitPrice = CORP_PRICES[item.id];
+    } else if (STATIC_PRODUCT_PRICES[item.id] !== undefined) {
+      unitPrice = STATIC_PRODUCT_PRICES[item.id];
     } else {
       unitPrice = dbPriceMap.get(item.id);
     }
