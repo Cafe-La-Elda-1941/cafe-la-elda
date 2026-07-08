@@ -21,20 +21,20 @@ const steps = [
   },
   {
     num: "04",
-    title: "Horneado",
-    desc: "Horneamos a temperatura precisa hasta dorarlas perfectamente, logrando ese crunch irresistible.",
+    title: "Desmoldado",
+    desc: "Desmoldamos cada galleta con cuidado tras el horneado, conservando su forma perfecta y textura crujiente.",
     image: "/images/proceso-galletas-04-horneado.jpg",
   },
   {
     num: "05",
-    title: "Empaque",
-    desc: "Empacamos cuidando cada detalle para que lleguen frescas y crujientes, listas para disfrutar.",
+    title: "Horneado",
+    desc: "Horneamos a temperatura precisa hasta dorarlas perfectamente, logrando ese crunch irresistible.",
     image: "/images/proceso-galletas-05-empaque.jpg",
   },
   {
     num: "06",
-    title: "Control de Calidad",
-    desc: "Revisamos cada lote para garantizar que nuestras panderositas lleguen perfectas a tu mesa.",
+    title: "Empaque",
+    desc: "Empacamos cuidando cada detalle para que lleguen frescas y crujientes, listas para disfrutar.",
     image: "/images/proceso-galletas-06-control.jpg",
   },
 ];
