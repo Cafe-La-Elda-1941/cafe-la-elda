@@ -31,6 +31,12 @@ const steps = [
     desc: "Empacamos cuidando cada detalle para que lleguen frescas y crujientes, listas para disfrutar.",
     image: "/images/proceso-galletas-05-empaque.jpg",
   },
+  {
+    num: "06",
+    title: "Control de Calidad",
+    desc: "Revisamos cada lote para garantizar que nuestras panderositas lleguen perfectas a tu mesa.",
+    image: "/images/proceso-galletas-06-control.jpg",
+  },
 ];
 
 export function ProcesoGalletasSection() {
@@ -46,7 +52,7 @@ export function ProcesoGalletasSection() {
         accentColor="amarillo"
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mt-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mt-16">
         {steps.map((step) => (
           <div
             key={step.num}

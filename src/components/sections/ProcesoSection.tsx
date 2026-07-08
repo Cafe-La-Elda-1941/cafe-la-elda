@@ -29,7 +29,7 @@ const steps = [
     num: "05",
     title: "Empaque",
     desc: "Empacado al vacío preservando frescura, aroma y sabor hasta llegar a tu hogar.",
-    image: "/images/proceso-cafe-empaque.png",
+    image: "/images/proceso-cafe-05-empaque.jpg",
   },
 ];
 
