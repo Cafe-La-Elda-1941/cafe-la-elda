@@ -126,7 +126,7 @@ function formatPrice(price: number): string {
 }
 
 export function RegalosCorporativosSection() {
-  const { addItem } = useCart();
+  const { addItem, items: cartItems } = useCart();
   const [paqueteSeleccionado, setPaqueteSeleccionado] = useState<string | null>(null);
   const [cantidad, setCantidad] = useState<number>(100);
   const [error, setError] = useState<string>("");
@@ -135,12 +135,28 @@ export function RegalosCorporativosSection() {
 
   const paqueteActual = paquetes.find((p) => p.id === paqueteSeleccionado);
 
+  // IDs de paquetes corporativos que ya están en el carrito
+  const enCarrito = new Set(cartItems.map((i) => i.id));
+
   function handleSelectPaquete(id: string) {
     const paq = paquetes.find((p) => p.id === id);
     setPaqueteSeleccionado(id);
     setCantidad(paq?.cantidadMinima || 100);
     setError("");
     setMostrarCotizacion(true);
+  }
+
+  // Agrega directo con la cantidad mínima, sin abrir el panel
+  function handleQuickAdd(paq: PaqueteCorporativo) {
+    addItem({
+      id: `corp-${paq.id}`,
+      name: `Paquete Corporativo ${paq.nombre}`,
+      price: paq.precioUnidad,
+      weight: `Nivel ${paq.nivel} · ${paq.contenido.join(", ")}`,
+      image: paq.imagen,
+      minQuantity: paq.cantidadMinima,
+      quantity: paq.cantidadMinima,
+    });
   }
 
   function handleCantidad(cambio: number) {
@@ -259,18 +275,20 @@ export function RegalosCorporativosSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 mb-16">
           {paquetes.map((paq) => {
             const isSelected = paqueteSeleccionado === paq.id;
+            const yaEnCarrito = enCarrito.has(`corp-${paq.id}`);
 
             return (
               <div
                 key={paq.id}
-                className={`relative rounded-2xl overflow-hidden transition-all duration-500 group cursor-pointer ${
+                className={`relative rounded-2xl overflow-hidden transition-all duration-500 group ${
                   isSelected
                     ? "ring-2 ring-amarillo shadow-2xl shadow-amarillo/20 scale-[1.02]"
+                    : yaEnCarrito
+                    ? "ring-1 ring-verde-claro/50 shadow-xl shadow-verde/10"
                     : paq.destacado
                     ? "ring-1 ring-amarillo/40 shadow-xl shadow-black/40"
                     : "ring-1 ring-amarillo/10 shadow-lg shadow-black/30"
                 } bg-gradient-to-br from-cafe-medio/25 via-cafe-oscuro to-cafe-medio/15 hover:ring-amarillo/40 hover:shadow-2xl hover:shadow-amarillo/10`}
-                onClick={() => handleSelectPaquete(paq.id)}
               >
                 {/* Brillo superior al hover */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-b from-amarillo/5 to-transparent pointer-events-none" />
@@ -297,10 +315,19 @@ export function RegalosCorporativosSection() {
                 </div>
 
                 {/* Badge destacado */}
-                {paq.destacado && (
+                {paq.destacado && !yaEnCarrito && (
                   <div className="absolute top-12 right-4 z-10">
                     <div className="px-3 py-1 rounded-full bg-amarillo text-cafe-oscuro text-[9px] tracking-[2px] uppercase font-josefin font-bold shadow-lg shadow-amarillo/30">
                       ★ Más Pedido
+                    </div>
+                  </div>
+                )}
+
+                {/* Badge ya en carrito */}
+                {yaEnCarrito && (
+                  <div className="absolute top-12 right-4 z-10">
+                    <div className="px-3 py-1 rounded-full bg-verde-claro text-cafe-oscuro text-[9px] tracking-[2px] uppercase font-josefin font-bold shadow-lg shadow-verde/30 flex items-center gap-1">
+                      ✓ En el Carrito
                     </div>
                   </div>
                 )}
@@ -397,20 +424,40 @@ export function RegalosCorporativosSection() {
                     </div>
                   </div>
 
-                  {/* Botón seleccionar */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectPaquete(paq.id);
-                    }}
-                    className={`mt-5 w-full py-3 rounded-full font-josefin font-bold text-[12px] tracking-[3px] uppercase transition-all duration-300 ${
-                      isSelected
-                        ? "bg-amarillo text-cafe-oscuro shadow-lg shadow-amarillo/30"
-                        : "bg-amarillo/10 text-amarillo border border-amarillo/30 hover:bg-amarillo hover:text-cafe-oscuro hover:shadow-lg hover:shadow-amarillo/20"
-                    }`}
-                  >
-                    {isSelected ? "✓ Paquete Seleccionado" : "Seleccionar Paquete"}
-                  </button>
+                  {/* Botones de acción */}
+                  <div className="mt-5 flex flex-col gap-2">
+                    {/* Botón principal — Agregar directo */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleQuickAdd(paq);
+                      }}
+                      className={`w-full py-3 rounded-full font-josefin font-bold text-[12px] tracking-[3px] uppercase transition-all duration-300 border-none cursor-pointer ${
+                        yaEnCarrito
+                          ? "bg-verde-claro/20 text-verde-claro border border-verde-claro/40"
+                          : "bg-gradient-to-r from-amarillo-oscuro to-amarillo text-cafe-oscuro hover:shadow-lg hover:shadow-amarillo/30"
+                      }`}
+                    >
+                      {yaEnCarrito
+                        ? `✓ Agregar ${paq.cantidadMinima} más`
+                        : `🛒 Agregar ${paq.cantidadMinima} un.`}
+                    </button>
+
+                    {/* Botón secundario — Personalizar cantidad */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelectPaquete(paq.id);
+                      }}
+                      className={`w-full py-2.5 rounded-full font-josefin font-bold text-[11px] tracking-[2px] uppercase transition-all duration-300 cursor-pointer ${
+                        isSelected
+                          ? "bg-amarillo/20 text-amarillo border border-amarillo/50"
+                          : "bg-transparent text-crema/50 border border-crema/15 hover:text-amarillo hover:border-amarillo/30"
+                      }`}
+                    >
+                      {isSelected ? "✓ Personalizando..." : "⚙ Personalizar Cantidad"}
+                    </button>
+                  </div>
                 </div>
               </div>
             );
