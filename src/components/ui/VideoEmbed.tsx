@@ -11,6 +11,8 @@ interface VideoEmbedProps {
   title: string;
   /** Clase adicional para el contenedor */
   className?: string;
+  /** Ancho máximo del video (default: 380px). Ej: "500px", "100%" */
+  maxWidth?: string;
 }
 
 /**
@@ -31,6 +33,7 @@ export function VideoEmbed({
   platform,
   title,
   className = "",
+  maxWidth = "380px",
 }: VideoEmbedProps) {
   const [loaded, setLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -71,7 +74,7 @@ export function VideoEmbed({
       className={`relative w-full h-full flex items-center justify-center ${className}`}
     >
       {/* Marco decorativo profesional */}
-      <div className="relative w-full max-w-[380px] aspect-[9/16] rounded-xl overflow-hidden shadow-2xl bg-black ring-1 ring-amarillo/20">
+      <div className="relative w-full aspect-[9/16] rounded-xl overflow-hidden shadow-2xl bg-black ring-1 ring-amarillo/20" style={{ maxWidth }}>
 
         {/* === Video local HTML5 === */}
         {platform === "local" && loaded && (

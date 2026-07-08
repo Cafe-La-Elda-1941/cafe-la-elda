@@ -254,15 +254,16 @@ export function AliadosSection() {
         </div>
       </div>
 
-      {/* === Aliado institucional: SENA — Tecnoparque (con video de YouTube) === */}
+      {/* === Aliado institucional: SENA — Tecnoparque (con video local) === */}
       <div className="mt-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 rounded-2xl overflow-hidden border-2 border-amarillo/40 bg-gradient-to-br from-cafe-oscuro/80 via-cafe-oscuro/60 to-verde/10 shadow-2xl shadow-amarillo/10">
-          {/* Columna video YouTube */}
-          <div className="md:col-span-2 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
+          {/* Columna video — más grande (3/5 = 60%) */}
+          <div className="md:col-span-3 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-8 min-h-[500px]">
             <VideoEmbed
-              src="https://www.youtube.com/embed/McMeDwu94ss"
-              platform="youtube"
+              src="/videos/sena-tecnoparque.mp4"
+              platform="local"
               title="SENA Tecnoparque — Café La Elda 1941"
+              maxWidth="500px"
             />
             {/* Badge innovación y tecnología */}
             <div className="absolute top-4 left-4 z-30">
@@ -276,7 +277,7 @@ export function AliadosSection() {
           </div>
 
           {/* Columna contenido */}
-          <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center">
+          <div className="md:col-span-2 p-8 md:p-10 flex flex-col justify-center">
             <div className="text-[10px] tracking-[2px] uppercase text-amarillo/90 mb-3 font-josefin">
               Centro de Innovación · SENA Tecnoparque
             </div>
