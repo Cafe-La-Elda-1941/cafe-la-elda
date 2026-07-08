@@ -1,6 +1,7 @@
 "use client";
 
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { useCart } from "@/components/cart/CartProvider";
 
 export const coleccion = [
   {
@@ -96,6 +97,8 @@ function formatPrice(price: number): string {
 }
 
 export function CombosSection() {
+  const { addItem } = useCart();
+
   return (
     <section id="combos" className="py-24 px-[5%] bg-cafe-oscuro relative overflow-hidden">
       {/* Texturas decorativas de fondo */}
@@ -254,7 +257,18 @@ export function CombosSection() {
                             Ahorro {formatPrice(ahorro)}
                           </span>
                         </div>
-                        <button className="group/btn relative ml-auto overflow-hidden px-7 py-3.5 rounded-full bg-amarillo text-cafe-oscuro font-josefin font-bold text-[12px] tracking-[2px] uppercase transition-all duration-300 hover:shadow-xl hover:shadow-amarillo/25 hover:scale-[1.03] active:scale-[0.98]">
+                        <button
+                          onClick={() =>
+                            addItem({
+                              id: `combo-${combo.numero}`,
+                              name: `Colección ${combo.nombre}`,
+                              price: combo.precio,
+                              weight: combo.contenido.join(", "),
+                              image: combo.imagen || null,
+                            })
+                          }
+                          className="group/btn relative ml-auto overflow-hidden px-7 py-3.5 rounded-full bg-amarillo text-cafe-oscuro font-josefin font-bold text-[12px] tracking-[2px] uppercase transition-all duration-300 hover:shadow-xl hover:shadow-amarillo/25 hover:scale-[1.03] active:scale-[0.98]"
+                        >
                           <span className="relative z-10 flex items-center gap-2">
                             Adquirir Colección
                             <span className="transition-transform duration-300 group-hover/btn:translate-x-1">→</span>
