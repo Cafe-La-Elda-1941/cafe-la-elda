@@ -166,9 +166,9 @@ export function AliadosSection() {
           {/* Columna video Instagram */}
           <div className="md:col-span-2 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
             <VideoEmbed
-              src="https://www.instagram.com/p/DLaFvUGxy-I/embed"
-              platform="instagram"
-              title="Video de Gobernación de Risaralda — Café La Elda 1941"
+              src="/videos/gobernacion-risaralda.mp4"
+              platform="local"
+              title="Gobernación de Risaralda — Café La Elda 1941"
             />
             {/* Badge aliado institucional (fijo siempre visible) */}
             <div className="absolute top-4 left-4 z-30">
