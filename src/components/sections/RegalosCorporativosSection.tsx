@@ -375,6 +375,10 @@ export function RegalosCorporativosSection() {
 
                   {/* Botón seleccionar */}
                   <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectPaquete(paq.id);
+                    }}
                     className={`mt-5 w-full py-3 rounded-full font-josefin font-bold text-[12px] tracking-[3px] uppercase transition-all duration-300 ${
                       isSelected
                         ? "bg-amarillo text-cafe-oscuro shadow-lg shadow-amarillo/30"
