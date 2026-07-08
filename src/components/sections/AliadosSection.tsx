@@ -213,8 +213,8 @@ export function AliadosSection() {
           {/* Columna video Instagram */}
           <div className="md:col-span-2 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
             <VideoEmbed
-              src="https://www.instagram.com/p/C9z74a9RQj_/embed"
-              platform="instagram"
+              src="/videos/alcaldia-dosquebradas.mp4"
+              platform="local"
               title="Alcaldía de Dosquebradas — Café La Elda 1941"
             />
             {/* Badge comercialización local */}
