@@ -3,10 +3,10 @@
 import { useState, useRef } from "react";
 
 interface VideoEmbedProps {
-  /** URL completa del embed de Instagram o YouTube */
+  /** URL completa del embed de Instagram, YouTube o ruta local del video */
   src: string;
   /** Tipo de plataforma */
-  platform: "instagram" | "youtube";
+  platform: "instagram" | "youtube" | "local";
   /** Título descriptivo para accesibilidad */
   title: string;
   /** Clase adicional para el contenedor */
@@ -14,13 +14,17 @@ interface VideoEmbedProps {
 }
 
 /**
- * Componente profesional para embeber videos de Instagram o YouTube.
+ * Componente profesional para embeber videos.
+ *
+ * Soporta:
+ * - Instagram embed (con sandbox que bloquea redirecciones)
+ * - YouTube embed
+ * - Video local (HTML5 <video> con controles nativos)
  *
  * Características:
- * - Bloquea redirecciones no deseadas de Instagram (sandbox sin allow-top-navigation)
- * - Click para cargar el video (mejora performance y evita cargas innecesarias)
- * - Una vez cargado, el video se reproduce sin redirigir a Instagram
+ * - Click para cargar/reproducir (mejora performance)
  * - Recuadro con aspect ratio consistente y profesional
+ * - Sin redirecciones no deseadas
  */
 export function VideoEmbed({
   src,
@@ -29,13 +33,37 @@ export function VideoEmbed({
   className = "",
 }: VideoEmbedProps) {
   const [loaded, setLoaded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Sandbox: permite scripts y mismo origen para que el video funcione,
   // pero NO permite top-navigation (evita redirección a instagram.com)
   const sandboxAttrs = platform === "instagram"
     ? "allow-scripts allow-same-origin allow-popups"
-    : undefined; // YouTube no necesita sandbox restrictivo
+    : undefined;
+
+  // Etiqueta de plataforma para mostrar
+  const platformLabel =
+    platform === "instagram" ? "Instagram" :
+    platform === "youtube" ? "YouTube" :
+    "Café La Elda 1941";
+
+  const platformIcon =
+    platform === "instagram" ? "📷 IG" :
+    platform === "youtube" ? "▶ YT" :
+    "★ CL";
+
+  function handlePlayClick() {
+    if (platform === "local" && videoRef.current) {
+      setLoaded(true);
+      // Reproduce automáticamente al hacer clic
+      setTimeout(() => {
+        videoRef.current?.play().catch(() => {});
+      }, 100);
+    } else {
+      setLoaded(true);
+    }
+  }
 
   return (
     <div
@@ -45,10 +73,28 @@ export function VideoEmbed({
       {/* Marco decorativo profesional */}
       <div className="relative w-full max-w-[380px] aspect-[9/16] rounded-xl overflow-hidden shadow-2xl bg-black ring-1 ring-amarillo/20">
 
+        {/* === Video local HTML5 === */}
+        {platform === "local" && loaded && (
+          <video
+            ref={videoRef}
+            src={src}
+            className="absolute inset-0 w-full h-full object-cover"
+            controls
+            controlsList="nodownload noremoteplayback"
+            playsInline
+            preload="auto"
+            aria-label={title}
+          >
+            <p className="text-crema/60 text-sm p-4 text-center">
+              Tu navegador no soporta la reproducción de video.
+            </p>
+          </video>
+        )}
+
         {/* Placeholder con botón de play mientras carga */}
         {!loaded && (
           <button
-            onClick={() => setLoaded(true)}
+            onClick={handlePlayClick}
             className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-cafe-oscuro via-cafe-medio to-cafe-oscuro transition-all hover:from-cafe-medio hover:to-cafe-oscuro group cursor-pointer"
             aria-label={`Reproducir video: ${title}`}
           >
@@ -71,14 +117,14 @@ export function VideoEmbed({
                 ▶ Ver Video
               </p>
               <p className="text-crema/40 text-[9px] tracking-[1px] font-josefin mt-1">
-                {platform === "instagram" ? "Instagram" : "YouTube"}
+                {platformLabel}
               </p>
             </div>
           </button>
         )}
 
-        {/* iframe cargado con sandbox que bloquea redirección */}
-        {loaded && (
+        {/* === iframe para Instagram o YouTube === */}
+        {platform !== "local" && loaded && (
           <iframe
             src={src}
             className="absolute inset-0 w-full h-full"
@@ -95,7 +141,7 @@ export function VideoEmbed({
         {/* Indicador de plataforma (esquina superior) */}
         <div className="absolute top-2 right-2 z-10 pointer-events-none">
           <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-cafe-oscuro/80 backdrop-blur-sm text-[8px] tracking-[1px] uppercase font-josefin text-crema/60">
-            {platform === "instagram" ? "📷 IG" : "▶ YT"}
+            {platformIcon}
           </span>
         </div>
       </div>

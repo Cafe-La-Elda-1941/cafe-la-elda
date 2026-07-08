@@ -70,8 +70,8 @@ export function AliadosSection() {
           {/* Columna video Instagram */}
           <div className="md:col-span-2 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
             <VideoEmbed
-              src="https://www.instagram.com/p/ConLQcQA_GJ/embed"
-              platform="instagram"
+              src="/videos/ingenio-risaralda.mp4"
+              platform="local"
               title="Video de Ingenio Risaralda — Café La Elda 1941"
             />
             {/* Badge aliado principal (fijo siempre visible) */}
