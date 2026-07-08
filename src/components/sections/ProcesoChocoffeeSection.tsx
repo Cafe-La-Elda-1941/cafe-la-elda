@@ -52,11 +52,11 @@ export function ProcesoChocoffeeSection() {
             key={step.num}
             className="flex flex-col rounded-lg overflow-hidden bg-cafe-oscuro/[0.4] border border-amarillo/15 transition-all duration-300 hover:-translate-y-2 hover:border-amarillo/40 hover:shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
           >
-            <div className="relative aspect-[4/3] overflow-hidden">
+            <div className="relative aspect-[4/3] overflow-hidden bg-cafe-oscuro">
               <img
                 src={step.image}
                 alt={step.title}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                className="w-full h-full object-contain transition-transform duration-500 hover:scale-105"
               />
               <span className="absolute top-3 left-3 w-11 h-11 rounded-full flex items-center justify-center bg-cafe-oscuro/90 border-[2px] border-amarillo font-bebas text-amarillo text-2xl">
                 {step.num}

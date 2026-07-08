@@ -29,7 +29,7 @@ const steps = [
     num: "05",
     title: "Empaque",
     desc: "Empacado al vacío preservando frescura, aroma y sabor hasta llegar a tu hogar.",
-    image: "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Vacuum%20packed%20specialty%20coffee%20bags%20with%20valve%20on%20a%20rustic%20wooden%20table%2C%20freshly%20sealed%20coffee%20packaging%2C%20artisanal%20premium%20coffee%20branding%2C%20realistic%20photograph%2C%20high%20detail&image_size=landscape_4_3",
+    image: "/images/proceso-cafe-empaque.png",
   },
 ];
 
@@ -52,11 +52,11 @@ export function ProcesoSection() {
             key={step.num}
             className="flex flex-col rounded-lg overflow-hidden bg-cafe-oscuro/[0.4] border border-amarillo/15 transition-all duration-300 hover:-translate-y-2 hover:border-amarillo/40 hover:shadow-[0_20px_60px_rgba(0,0,0,0.4)]"
           >
-            <div className="relative aspect-[4/3] overflow-hidden">
+            <div className="relative aspect-[4/3] overflow-hidden bg-cafe-oscuro">
               <img
                 src={step.image}
                 alt={step.title}
-                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                className="w-full h-full object-contain transition-transform duration-500 hover:scale-105"
               />
               <span className="absolute top-3 left-3 w-11 h-11 rounded-full flex items-center justify-center bg-cafe-oscuro/90 border-[2px] border-amarillo font-bebas text-amarillo text-2xl">
                 {step.num}
