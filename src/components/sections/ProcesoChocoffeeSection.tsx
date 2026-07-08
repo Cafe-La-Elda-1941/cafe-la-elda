@@ -29,7 +29,7 @@ const steps = [
     num: "05",
     title: "Empaque",
     desc: "Empacamos con cuidado para preservar el crunch y la frescura de cada grano de Chocoffee La Elda.",
-    image: "https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=Gourmet%20chocolate%20covered%20coffee%20beans%20in%20elegant%20kraft%20packaging%2C%20artisanal%20Colombian%20confection%20package%2C%20premium%20product%20presentation%2C%20rustic%20label%2C%20warm%20light%2C%20realistic%20photograph%2C%20high%20detail&image_size=landscape_4_3",
+    image: "/images/proceso-chocoffee-empaque.png",
   },
 ];
 
