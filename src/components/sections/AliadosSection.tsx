@@ -1,4 +1,5 @@
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { VideoEmbed } from "@/components/ui/VideoEmbed";
 
 const aliadoPrincipal = {
   nombre: "Ingenio Risaralda",
@@ -67,18 +68,12 @@ export function AliadosSection() {
       <div className="mt-20 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 rounded-2xl overflow-hidden border-2 border-amarillo/40 bg-gradient-to-br from-cafe-oscuro/80 via-cafe-oscuro/60 to-verde/10 shadow-2xl shadow-amarillo/10">
           {/* Columna video Instagram */}
-          <div className="md:col-span-2 relative bg-crema flex items-center justify-center p-4 md:p-6 min-h-[450px]">
-            <div className="relative z-0 w-full h-full flex items-center justify-center">
-              <iframe
-                src="https://www.instagram.com/p/ConLQcQA_GJ/embed"
-                className="w-full max-w-[380px]"
-                style={{ minHeight: "440px", border: "none" }}
-                loading="lazy"
-                scrolling="no"
-                allowFullScreen
-                title="Video de Ingenio Risaralda — Café La Elda 1941"
-              />
-            </div>
+          <div className="md:col-span-2 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
+            <VideoEmbed
+              src="https://www.instagram.com/p/ConLQcQA_GJ/embed"
+              platform="instagram"
+              title="Video de Ingenio Risaralda — Café La Elda 1941"
+            />
             {/* Badge aliado principal (fijo siempre visible) */}
             <div className="absolute top-4 left-4 z-30">
               <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cafe-oscuro border-2 border-amarillo/60 shadow-lg">
@@ -169,18 +164,12 @@ export function AliadosSection() {
       <div className="mt-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 rounded-2xl overflow-hidden border-2 border-amarillo/40 bg-gradient-to-br from-cafe-oscuro/80 via-cafe-oscuro/60 to-amarillo/5 shadow-2xl shadow-amarillo/10">
           {/* Columna video Instagram */}
-          <div className="md:col-span-2 relative bg-crema flex items-center justify-center p-4 md:p-6 min-h-[450px]">
-            <div className="relative z-0 w-full h-full flex items-center justify-center">
-              <iframe
-                src="https://www.instagram.com/p/DLaFvUGxy-I/embed"
-                className="w-full max-w-[380px]"
-                style={{ minHeight: "440px", border: "none" }}
-                loading="lazy"
-                scrolling="no"
-                allowFullScreen
-                title="Video de Gobernación de Risaralda — Café La Elda 1941"
-              />
-            </div>
+          <div className="md:col-span-2 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
+            <VideoEmbed
+              src="https://www.instagram.com/p/DLaFvUGxy-I/embed"
+              platform="instagram"
+              title="Video de Gobernación de Risaralda — Café La Elda 1941"
+            />
             {/* Badge aliado institucional (fijo siempre visible) */}
             <div className="absolute top-4 left-4 z-30">
               <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cafe-oscuro border-2 border-amarillo/60 shadow-lg">
@@ -222,18 +211,12 @@ export function AliadosSection() {
       <div className="mt-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 rounded-2xl overflow-hidden border-2 border-amarillo/40 bg-gradient-to-br from-cafe-oscuro/80 via-cafe-oscuro/60 to-verde/10 shadow-2xl shadow-amarillo/10">
           {/* Columna video Instagram */}
-          <div className="md:col-span-2 relative bg-crema flex items-center justify-center p-4 md:p-6 min-h-[450px]">
-            <div className="relative z-0 w-full h-full flex items-center justify-center">
-              <iframe
-                src="https://www.instagram.com/p/C9z74a9RQj_/embed"
-                className="w-full max-w-[380px]"
-                style={{ minHeight: "440px", border: "none" }}
-                loading="lazy"
-                scrolling="no"
-                allowFullScreen
-                title="Alcaldía de Dosquebradas — Café La Elda 1941"
-              />
-            </div>
+          <div className="md:col-span-2 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
+            <VideoEmbed
+              src="https://www.instagram.com/p/C9z74a9RQj_/embed"
+              platform="instagram"
+              title="Alcaldía de Dosquebradas — Café La Elda 1941"
+            />
             {/* Badge comercialización local */}
             <div className="absolute top-4 left-4 z-30">
               <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cafe-oscuro border-2 border-amarillo/60 shadow-lg">
@@ -275,18 +258,12 @@ export function AliadosSection() {
       <div className="mt-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 rounded-2xl overflow-hidden border-2 border-amarillo/40 bg-gradient-to-br from-cafe-oscuro/80 via-cafe-oscuro/60 to-verde/10 shadow-2xl shadow-amarillo/10">
           {/* Columna video YouTube */}
-          <div className="md:col-span-2 relative bg-black flex items-center justify-center p-4 md:p-6 min-h-[450px]">
-            <div className="relative z-0 w-full h-full flex items-center justify-center">
-              <iframe
-                src="https://www.youtube.com/embed/McMeDwu94ss"
-                className="w-full aspect-video max-w-[380px]"
-                style={{ border: "none" }}
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                title="SENA Tecnoparque — Café La Elda 1941"
-              />
-            </div>
+          <div className="md:col-span-2 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
+            <VideoEmbed
+              src="https://www.youtube.com/embed/McMeDwu94ss"
+              platform="youtube"
+              title="SENA Tecnoparque — Café La Elda 1941"
+            />
             {/* Badge innovación y tecnología */}
             <div className="absolute top-4 left-4 z-30">
               <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cafe-oscuro border-2 border-amarillo/60 shadow-lg">
@@ -352,18 +329,12 @@ export function AliadosSection() {
           </div>
 
           {/* Columna video YouTube (derecha en escritorio) */}
-          <div className="md:col-span-2 md:order-2 order-1 relative bg-black flex items-center justify-center p-4 md:p-6 min-h-[450px]">
-            <div className="relative z-0 w-full h-full flex items-center justify-center">
-              <iframe
-                src="https://www.youtube.com/embed/NUTl-uxb9yw"
-                className="w-full aspect-video max-w-[380px]"
-                style={{ border: "none" }}
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                title="ASOCAÑA — Café La Elda 1941"
-              />
-            </div>
+          <div className="md:col-span-2 md:order-2 order-1 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
+            <VideoEmbed
+              src="https://www.youtube.com/embed/NUTl-uxb9yw"
+              platform="youtube"
+              title="ASOCAÑA — Café La Elda 1941"
+            />
             {/* Badge sector agroindustrial */}
             <div className="absolute top-4 right-4 z-30">
               <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cafe-oscuro border-2 border-amarillo/60 shadow-lg">
@@ -381,18 +352,12 @@ export function AliadosSection() {
       <div className="mt-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 rounded-2xl overflow-hidden border-2 border-amarillo/40 bg-gradient-to-br from-cafe-oscuro/80 via-cafe-oscuro/60 to-verde/10 shadow-2xl shadow-amarillo/10">
           {/* Columna video Instagram */}
-          <div className="md:col-span-2 relative bg-crema flex items-center justify-center p-4 md:p-6 min-h-[450px]">
-            <div className="relative z-0 w-full h-full flex items-center justify-center">
-              <iframe
-                src="https://www.instagram.com/p/DJuxpOuy6zs/embed"
-                className="w-full max-w-[380px]"
-                style={{ minHeight: "440px", border: "none" }}
-                loading="lazy"
-                scrolling="no"
-                allowFullScreen
-                title="ASOCAFE Manatial — Café La Elda 1941"
-              />
-            </div>
+          <div className="md:col-span-2 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
+            <VideoEmbed
+              src="https://www.instagram.com/p/DJuxpOuy6zs/embed"
+              platform="instagram"
+              title="ASOCAFE Manatial — Café La Elda 1941"
+            />
             {/* Badge asociación cafetera */}
             <div className="absolute top-4 left-4 z-30">
               <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cafe-oscuro border-2 border-amarillo/60 shadow-lg">
@@ -483,18 +448,12 @@ export function AliadosSection() {
       <div className="mt-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 rounded-2xl overflow-hidden border-2 border-amarillo/40 bg-gradient-to-br from-cafe-oscuro/80 via-cafe-oscuro/60 to-verde/10 shadow-2xl shadow-amarillo/10">
           {/* Columna video Instagram */}
-          <div className="md:col-span-2 relative bg-crema flex items-center justify-center p-4 md:p-6 min-h-[450px]">
-            <div className="relative z-0 w-full h-full flex items-center justify-center">
-              <iframe
-                src="https://www.instagram.com/p/DIUoo27A-IA/embed"
-                className="w-full max-w-[380px]"
-                style={{ minHeight: "440px", border: "none" }}
-                loading="lazy"
-                scrolling="no"
-                allowFullScreen
-                title="Secretaría de Desarrollo Agropecuario — Café La Elda 1941"
-              />
-            </div>
+          <div className="md:col-span-2 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
+            <VideoEmbed
+              src="https://www.instagram.com/p/DIUoo27A-IA/embed"
+              platform="instagram"
+              title="Secretaría de Desarrollo Agropecuario — Café La Elda 1941"
+            />
             {/* Badge articulación departamental */}
             <div className="absolute top-4 left-4 z-30">
               <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cafe-oscuro border-2 border-amarillo/60 shadow-lg">
