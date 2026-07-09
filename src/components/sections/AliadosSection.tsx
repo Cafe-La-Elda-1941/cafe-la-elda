@@ -307,22 +307,46 @@ export function AliadosSection() {
         </div>
       </div>
 
-      {/* === Aliado institucional: ASOCAÑA (con video de YouTube) === */}
+      {/* === Aliado institucional: ASOCAÑA (video horizontal amplio) === */}
       <div className="mt-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-5 rounded-2xl overflow-hidden border-2 border-amarillo/40 bg-gradient-to-br from-cafe-oscuro/80 via-cafe-oscuro/60 to-verde/10 shadow-2xl shadow-amarillo/10">
-          {/* Columna contenido (izquierda en escritorio) */}
-          <div className="md:col-span-3 md:order-1 order-2 p-8 md:p-10 flex flex-col justify-center">
-            <div className="text-[10px] tracking-[2px] uppercase text-amarillo/90 mb-3 font-josefin">
-              Sector Agroindustrial · Asociación de Cultivadores de Caña
+        <div className="rounded-2xl overflow-hidden border-2 border-amarillo/40 bg-gradient-to-br from-cafe-oscuro/80 via-cafe-oscuro/60 to-verde/10 shadow-2xl shadow-amarillo/10">
+          {/* Video horizontal a ancho completo (16:9) */}
+          <div className="relative bg-cafe-oscuro">
+            <div className="px-4 md:px-8 pt-6">
+              <VideoEmbed
+                src="/videos/asocana-sector-agroindustrial.mp4"
+                platform="local"
+                title="ASOCAÑA — Sector Agroindustrial · Café La Elda 1941"
+                maxWidth="100%"
+                orientation="landscape"
+              />
             </div>
-            <h3 className="font-playfair text-3xl md:text-4xl text-crema mb-5 leading-tight">
-              ASOCAÑA
-            </h3>
-            <p className="font-cormorant italic text-[17px] text-crema/75 leading-relaxed mb-6">
-              <span className="text-amarillo not-italic font-josefin font-semibold">ASOCAÑA</span>, la Asociación de Cultivadores de Caña de Azúcar, ha sido un pilar del sector agroindustrial que ha respaldado el crecimiento de <span className="text-amarillo">Café La Elda 1941</span>. Gracias a esta alianza hemos recorrido el Valle del Cauca y participado en ferias y eventos, llevando el sabor de nuestro café a nuevos públicos y consolidando la presencia de nuestra marca en el panorama agroindustrial colombiano.
-            </p>
+            {/* Badge sector agroindustrial */}
+            <div className="absolute top-8 left-8 z-30">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cafe-oscuro/90 backdrop-blur-sm border-2 border-amarillo/60 shadow-lg">
+                <span className="text-amarillo text-xs">★</span>
+                <span className="text-amarillo text-[10px] tracking-[2px] uppercase font-josefin font-semibold">
+                  Sector Agroindustrial
+                </span>
+              </span>
+            </div>
+          </div>
+
+          {/* Contenido debajo del video */}
+          <div className="p-8 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2">
+              <div className="text-[10px] tracking-[2px] uppercase text-amarillo/90 mb-3 font-josefin">
+                Sector Agroindustrial · Asociación de Cultivadores de Caña
+              </div>
+              <h3 className="font-playfair text-3xl md:text-4xl text-crema mb-5 leading-tight">
+                ASOCAÑA
+              </h3>
+              <p className="font-cormorant italic text-[17px] text-crema/75 leading-relaxed">
+                <span className="text-amarillo not-italic font-josefin font-semibold">ASOCAÑA</span>, la Asociación de Cultivadores de Caña de Azúcar, ha sido un pilar del sector agroindustrial que ha respaldado el crecimiento de <span className="text-amarillo">Café La Elda 1941</span>. Gracias a esta alianza hemos recorrido el Valle del Cauca y participado en ferias y eventos, llevando el sabor de nuestro café a nuevos públicos y consolidando la presencia de nuestra marca en el panorama agroindustrial colombiano.
+              </p>
+            </div>
             {/* Etiquetas de apoyo */}
-            <div className="flex flex-wrap gap-2.5">
+            <div className="flex flex-wrap gap-2.5 items-start content-start md:pt-12">
               {["Sector Agroindustrial", "Ferias & Eventos", "Valle del Cauca", "Visibilidad de Marca"].map((et) => (
                 <span
                   key={et}
@@ -331,24 +355,6 @@ export function AliadosSection() {
                   {et}
                 </span>
               ))}
-            </div>
-          </div>
-
-          {/* Columna video YouTube (derecha en escritorio) */}
-          <div className="md:col-span-2 md:order-2 order-1 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
-            <VideoEmbed
-              src="https://www.youtube.com/embed/NUTl-uxb9yw"
-              platform="youtube"
-              title="ASOCAÑA — Café La Elda 1941"
-            />
-            {/* Badge sector agroindustrial */}
-            <div className="absolute top-4 right-4 z-30">
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-cafe-oscuro border-2 border-amarillo/60 shadow-lg">
-                <span className="text-amarillo text-xs">★</span>
-                <span className="text-amarillo text-[10px] tracking-[2px] uppercase font-josefin font-semibold">
-                  Sector Agroindustrial
-                </span>
-              </span>
             </div>
           </div>
         </div>
