@@ -68,17 +68,16 @@ export function VideoEmbed({
       {/* Marco decorativo profesional */}
       <div className="relative w-full aspect-[9/16] rounded-xl overflow-hidden shadow-2xl bg-black ring-1 ring-amarillo/20" style={{ maxWidth }}>
 
-        {/* === Video local HTML5 — autoPlay para que funcione con un click === */}
-        {platform === "local" && loaded && (
+        {/* === Video local HTML5 — siempre renderizado, primer frame visible === */}
+        {platform === "local" && (
           <video
             ref={videoRef}
             src={src}
             className="absolute inset-0 w-full h-full object-cover"
             controls
             controlsList="nodownload noremoteplayback"
-            autoPlay
             playsInline
-            preload="auto"
+            preload="metadata"
             aria-label={title}
           >
             <p className="text-crema/60 text-sm p-4 text-center">
@@ -87,8 +86,8 @@ export function VideoEmbed({
           </video>
         )}
 
-        {/* Placeholder con botón de play mientras carga */}
-        {!loaded && (
+        {/* Placeholder con botón de play — solo para Instagram/YouTube */}
+        {platform !== "local" && !loaded && (
           <button
             onClick={handlePlayClick}
             className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-cafe-oscuro via-cafe-medio to-cafe-oscuro transition-all hover:from-cafe-medio hover:to-cafe-oscuro group cursor-pointer"
