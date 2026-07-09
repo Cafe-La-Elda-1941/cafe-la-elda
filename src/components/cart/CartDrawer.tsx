@@ -80,9 +80,16 @@ export function CartDrawer() {
         {/* Items */}
         <div className="flex-1 overflow-y-auto p-6 dark-scrollbar">
           {items.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="text-5xl mb-4">☕</div>
+            <div className="text-center py-12 flex flex-col items-center">
+              <div className="relative w-full max-w-[280px] mb-6">
+                <img
+                  src="/images/carrito-vacio.png"
+                  alt="Tu carrito está vacío"
+                  className="w-full h-auto rounded-xl shadow-lg"
+                />
+              </div>
               <p className="font-cormorant italic text-lg text-crema/60">Tu carrito está vacío</p>
+              <p className="font-cormorant text-sm text-crema/40 mt-1">¡Agrega nuestros productos y disfruta el mejor café!</p>
             </div>
           ) : (
             <div className="flex flex-col gap-4">
