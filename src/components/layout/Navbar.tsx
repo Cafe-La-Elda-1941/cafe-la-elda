@@ -53,11 +53,15 @@ export function Navbar() {
         <li>
           <button
             onClick={() => setCartOpen(true)}
-            className="relative cursor-pointer bg-transparent border-none text-crema text-xl p-1"
+            className="relative cursor-pointer bg-transparent border-none p-1"
           >
-            🛒
+            <img
+              src="/images/carrito-icon.png"
+              alt="Carrito de compras"
+              className="w-9 h-9 object-contain drop-shadow-lg"
+            />
             {itemCount > 0 && (
-              <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-rojo text-crema">
+              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-rojo text-crema">
                 {itemCount}
               </span>
             )}
@@ -69,11 +73,15 @@ export function Navbar() {
       <div className="flex md:hidden items-center gap-4">
         <button
           onClick={() => setCartOpen(true)}
-          className="relative cursor-pointer bg-transparent border-none text-crema text-xl"
+          className="relative cursor-pointer bg-transparent border-none p-1"
         >
-          🛒
+          <img
+            src="/images/carrito-icon.png"
+            alt="Carrito de compras"
+            className="w-8 h-8 object-contain drop-shadow-lg"
+          />
           {itemCount > 0 && (
-            <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-rojo text-crema">
+            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold bg-rojo text-crema">
               {itemCount}
             </span>
           )}
