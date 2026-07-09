@@ -57,15 +57,7 @@ export function VideoEmbed({
     "★ CL";
 
   function handlePlayClick() {
-    if (platform === "local" && videoRef.current) {
-      setLoaded(true);
-      // Reproduce automáticamente al hacer clic
-      setTimeout(() => {
-        videoRef.current?.play().catch(() => {});
-      }, 100);
-    } else {
-      setLoaded(true);
-    }
+    setLoaded(true);
   }
 
   return (
@@ -76,7 +68,7 @@ export function VideoEmbed({
       {/* Marco decorativo profesional */}
       <div className="relative w-full aspect-[9/16] rounded-xl overflow-hidden shadow-2xl bg-black ring-1 ring-amarillo/20" style={{ maxWidth }}>
 
-        {/* === Video local HTML5 === */}
+        {/* === Video local HTML5 — autoPlay para que funcione con un click === */}
         {platform === "local" && loaded && (
           <video
             ref={videoRef}
@@ -84,6 +76,7 @@ export function VideoEmbed({
             className="absolute inset-0 w-full h-full object-cover"
             controls
             controlsList="nodownload noremoteplayback"
+            autoPlay
             playsInline
             preload="auto"
             aria-label={title}
