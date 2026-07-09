@@ -13,6 +13,8 @@ interface VideoEmbedProps {
   className?: string;
   /** Ancho máximo del video (default: 380px). Ej: "500px", "100%" */
   maxWidth?: string;
+  /** Orientación del video: "portrait" (9:16) o "landscape" (16:9). Default: portrait */
+  orientation?: "portrait" | "landscape";
 }
 
 /**
@@ -34,10 +36,15 @@ export function VideoEmbed({
   title,
   className = "",
   maxWidth = "380px",
+  orientation = "portrait",
 }: VideoEmbedProps) {
   const [loaded, setLoaded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Aspect ratio dinámico según orientación
+  const aspectClass = orientation === "landscape" ? "aspect-video" : "aspect-[9/16]";
+  const objectClass = orientation === "landscape" ? "object-contain" : "object-cover";
 
   // Sandbox: permite scripts y mismo origen para que el video funcione,
   // pero NO permite top-navigation (evita redirección a instagram.com)
@@ -66,7 +73,7 @@ export function VideoEmbed({
       className={`relative w-full h-full flex items-center justify-center ${className}`}
     >
       {/* Marco decorativo profesional */}
-      <div className="relative w-full aspect-[9/16] rounded-xl overflow-hidden shadow-2xl bg-black ring-1 ring-amarillo/20" style={{ maxWidth }}>
+      <div className={`relative w-full ${aspectClass} rounded-xl overflow-hidden shadow-2xl bg-black ring-1 ring-amarillo/20`} style={{ maxWidth }}>
 
         {/* === Video local HTML5 — siempre renderizado, primer frame visible === */}
         {/* El fragmento #t=0.5 fuerza al navegador a mostrar un frame real */}
@@ -74,7 +81,7 @@ export function VideoEmbed({
           <video
             ref={videoRef}
             src={`${src}#t=0.5`}
-            className="absolute inset-0 w-full h-full object-cover"
+            className={`absolute inset-0 w-full h-full ${objectClass}`}
             controls
             controlsList="nodownload noremoteplayback"
             playsInline
