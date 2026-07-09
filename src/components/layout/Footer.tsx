@@ -15,6 +15,12 @@ const contactLinks = [
   { label: "Dosquebradas, Risaralda", href: "#" },
 ];
 
+const legalLinks = [
+  { label: "Términos y Condiciones", href: "/legal/terminos" },
+  { label: "Política de Privacidad", href: "/legal/privacidad" },
+  { label: "Envíos y Devoluciones", href: "/legal/envios" },
+];
+
 const socialLinks = [
   { name: "Facebook", href: "https://facebook.com/laeldacafe1941", Icon: FacebookIcon },
   { name: "Instagram", href: "https://instagram.com/cafelaelda1941", Icon: InstagramIcon },
@@ -97,8 +103,21 @@ export function Footer() {
         </div>
       </div>
 
+      {/* Enlaces legales */}
+      <div className="flex flex-wrap justify-center gap-6 pb-6 border-t border-crema/[0.08] pt-6">
+        {legalLinks.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="font-cormorant text-crema/40 text-sm no-underline hover:text-amarillo transition-colors tracking-wide"
+          >
+            {item.label}
+          </Link>
+        ))}
+      </div>
+
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-crema/[0.08] text-xs text-crema/30 tracking-wider">
-        <span>© 2024 Café La Elda 1941 · <span className="text-verde-claro">RSA-0021672-2022</span> · Todos los derechos reservados</span>
+        <span>© 2025 Café La Elda 1941 · <span className="text-verde-claro">RSA-0021672-2022</span> · Todos los derechos reservados</span>
         <span>Hecho con ☕ en Risaralda, Colombia</span>
       </div>
     </footer>
