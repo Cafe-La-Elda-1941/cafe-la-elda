@@ -456,15 +456,16 @@ export function AliadosSection() {
         </div>
       </div>
 
-      {/* === Aliado institucional: Secretaría de Desarrollo Agropecuario (con video de Instagram) === */}
+      {/* === Aliado institucional: Secretaría de Desarrollo Agropecuario (video local) === */}
       <div className="mt-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 rounded-2xl overflow-hidden border-2 border-amarillo/40 bg-gradient-to-br from-cafe-oscuro/80 via-cafe-oscuro/60 to-verde/10 shadow-2xl shadow-amarillo/10">
-          {/* Columna video Instagram */}
-          <div className="md:col-span-2 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[450px]">
+          {/* Columna video local */}
+          <div className="md:col-span-2 relative bg-cafe-oscuro flex items-center justify-center p-4 md:p-6 min-h-[500px]">
             <VideoEmbed
-              src="https://www.instagram.com/p/DIUoo27A-IA/embed"
-              platform="instagram"
+              src="/videos/secretaria-desarrollo-agropecuario.mp4"
+              platform="local"
               title="Secretaría de Desarrollo Agropecuario — Café La Elda 1941"
+              maxWidth="380px"
             />
             {/* Badge articulación departamental */}
             <div className="absolute top-4 left-4 z-30">
