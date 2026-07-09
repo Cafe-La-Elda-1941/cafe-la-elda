@@ -148,10 +148,11 @@ export function OrigenSection() {
           {/* Video comercialización local */}
           <div className="lg:col-span-3 relative bg-crema flex items-center justify-center p-4 min-h-[420px]">
             <video
-              src="/images/comercializacion-local.mp4"
+              src="/images/comercializacion-local.mp4#t=0.5"
               controls
               className="w-full h-full object-contain"
               preload="metadata"
+              playsInline
             />
             {/* Badge ferias locales */}
             <div className="absolute top-5 left-5 z-30">

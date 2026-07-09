@@ -69,10 +69,11 @@ export function VideoEmbed({
       <div className="relative w-full aspect-[9/16] rounded-xl overflow-hidden shadow-2xl bg-black ring-1 ring-amarillo/20" style={{ maxWidth }}>
 
         {/* === Video local HTML5 — siempre renderizado, primer frame visible === */}
+        {/* El fragmento #t=0.5 fuerza al navegador a mostrar un frame real */}
         {platform === "local" && (
           <video
             ref={videoRef}
-            src={src}
+            src={`${src}#t=0.5`}
             className="absolute inset-0 w-full h-full object-cover"
             controls
             controlsList="nodownload noremoteplayback"
