@@ -95,11 +95,11 @@ export function CartDrawer() {
             <div className="flex flex-col gap-4">
               {items.map((item) => (
                 <div key={item.id} className="flex gap-4 p-4 rounded-lg bg-crema/[0.04] border border-crema/[0.08]">
-                  <div className="w-16 h-16 rounded-lg flex items-center justify-center shrink-0 text-3xl bg-crema/[0.06] overflow-hidden">
+                  <div className="w-16 h-16 rounded-lg flex items-center justify-center shrink-0 bg-crema/[0.06] overflow-hidden p-1">
                     {item.image ? (
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover rounded-md" />
                     ) : (
-                      "☕"
+                      <img src="/images/pocillo-item.png" alt={item.name} className="w-full h-full object-contain" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
