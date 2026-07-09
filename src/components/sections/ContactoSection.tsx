@@ -245,9 +245,14 @@ export function ContactoSection({ products }: { products: Product[] }) {
               <h4 className="font-playfair text-crema text-lg">Seleccione su pedido</h4>
               <button
                 onClick={() => setCartOpen(true)}
-                className="text-[11px] tracking-[1px] uppercase text-amarillo no-underline hover:text-amarillo-oscuro transition-colors bg-transparent border-none cursor-pointer"
+                className="flex items-center gap-2 text-[11px] tracking-[1px] uppercase text-amarillo no-underline hover:text-amarillo-oscuro transition-colors bg-transparent border-none cursor-pointer"
               >
-                🛒 Ver carrito ({itemCount})
+                <img
+                  src="/images/carrito-icon.png"
+                  alt="Carrito"
+                  className="w-6 h-6 object-contain inline-block"
+                />
+                Ver carrito ({itemCount})
               </button>
             </div>
 
