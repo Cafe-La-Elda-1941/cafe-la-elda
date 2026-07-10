@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FacebookIcon, InstagramIcon, TikTokIcon, YouTubeIcon, WhatsAppIcon } from "@/components/ui/SocialIcons";
 
 const productLinks = ["Café Grano 250g", "Café Molido 125g", "Café Familiar 500g", "Panderositas", "Arequipe de Café", "Chocoffee", "Kaski Cereal"];
-const companyLinks = [
+const companyLinksData = [
   { label: "Nuestra Historia", href: "#historia" },
   { label: "Origen del Café", href: "#origen" },
   { label: "Nuestro Proceso", href: "#proceso" },
@@ -30,6 +33,14 @@ const socialLinks = [
 ];
 
 export function Footer() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const prefix = isHome ? "" : "/";
+
+  // Aplicar prefijo a enlaces con hash (para que funcionen desde páginas legales)
+  const companyLinks = companyLinksData.map((l) => ({ ...l, href: `${prefix}${l.href}` }));
+  const productosHref = `${prefix}#productos`;
+
   return (
     <footer className="bg-[#0f0804] border-t-2 border-t-verde px-[5%] pt-16 pb-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
@@ -72,7 +83,7 @@ export function Footer() {
           <ul className="list-none flex flex-col gap-2.5">
             {productLinks.map((item) => (
               <li key={item}>
-                <Link href="#productos" className="font-cormorant text-crema/55 text-base no-underline hover:text-crema transition-colors">{item}</Link>
+                <Link href={productosHref} className="font-cormorant text-crema/55 text-base no-underline hover:text-crema transition-colors">{item}</Link>
               </li>
             ))}
           </ul>

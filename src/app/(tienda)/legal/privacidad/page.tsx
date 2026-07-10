@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Política de Privacidad",
@@ -9,6 +10,11 @@ export default function PrivacidadPage() {
   return (
     <main className="min-h-screen bg-cafe-oscuro pt-[70px] px-[5%] py-20">
       <div className="max-w-3xl mx-auto">
+        {/* Botón volver */}
+        <Link href="/#productos" className="inline-flex items-center gap-2 text-amarillo no-underline font-josefin text-sm tracking-wider mb-12 hover:gap-3 transition-all">
+          ← Volver a la tienda
+        </Link>
+
         {/* Encabezado */}
         <div className="text-center mb-16">
           <p className="font-josefin text-[11px] uppercase tracking-[4px] text-amarillo/60 mb-3">Documento Legal</p>
@@ -190,6 +196,13 @@ export default function PrivacidadPage() {
             o al correo
             <span className="text-amarillo"> laeldacafe1941@gmail.com</span>
           </p>
+        </div>
+
+        {/* Botón volver abajo */}
+        <div className="text-center mt-16">
+          <Link href="/#productos" className="inline-block no-underline font-josefin text-sm uppercase tracking-[3px] px-8 py-4 rounded-sm bg-verde border border-verde-claro text-crema hover:bg-verde-claro transition-colors">
+            ← Volver a la tienda
+          </Link>
         </div>
       </div>
     </main>

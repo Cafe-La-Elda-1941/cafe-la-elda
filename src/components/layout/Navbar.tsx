@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCart } from "@/components/cart/CartProvider";
 
-const links = [
+const sections = [
   { href: "#inicio", label: "Inicio" },
   { href: "#historia", label: "Historia" },
   { href: "#productos", label: "Productos" },
@@ -15,11 +16,19 @@ const links = [
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { itemCount, setCartOpen } = useCart();
+  const pathname = usePathname();
+
+  // Si no estamos en la página principal, los enlaces deben llevar primero al home
+  const isHome = pathname === "/";
+  const prefix = isHome ? "" : "/";
+
+  // Construir enlaces con prefijo
+  const links = sections.map((s) => ({ ...s, href: `${prefix}${s.href}` }));
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between h-[70px] px-[5%] bg-[rgba(26,15,8,0.95)] backdrop-blur-xl border-b-2 border-amarillo">
       {/* Logo */}
-      <Link href="#inicio" className="flex items-center gap-3 no-underline">
+      <Link href="/" className="flex items-center gap-3 no-underline">
         <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 text-center leading-[1.1] bg-amarillo text-verde font-playfair text-[10px] font-black border-[3px] border-verde p-1">
           la<br />Elda<br />1941
         </div>
@@ -44,7 +53,7 @@ export function Navbar() {
         ))}
         <li>
           <Link
-            href="#contacto"
+            href={`${prefix}#contacto`}
             className="text-crema no-underline uppercase tracking-[2px] text-[12px] px-5 py-2 rounded-sm bg-verde border border-verde-claro transition-colors duration-300 hover:bg-verde-claro"
           >
             Pedir Ahora
@@ -97,7 +106,7 @@ export function Navbar() {
       {/* Mobile dropdown */}
       {menuOpen && (
         <div className="absolute top-[70px] left-0 right-0 flex flex-col items-center gap-6 py-8 md:hidden bg-[rgba(26,15,8,0.98)] border-b-2 border-amarillo">
-          {[...links, { href: "#contacto", label: "Pedir Ahora" }].map((link) => (
+          {[...links, { href: `${prefix}#contacto`, label: "Pedir Ahora" }].map((link) => (
             <Link
               key={link.href}
               href={link.href}

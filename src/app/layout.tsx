@@ -6,6 +6,7 @@ import {
   Josefin_Sans,
 } from "next/font/google";
 import { StructuredData } from "@/components/seo/StructuredData";
+import { GoogleAnalytics } from "@/components/seo/GoogleAnalytics";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -142,6 +143,7 @@ export default function RootLayout({
     >
       <body>
         <StructuredData />
+        <GoogleAnalytics />
         {children}
       </body>
     </html>
