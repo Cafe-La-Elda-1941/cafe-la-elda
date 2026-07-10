@@ -126,11 +126,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   category: "food",
   verification: {
-    google: "",
-  },
-  other: {
-    "google-site-verification": "",
-    "msvalidate.01": "",
+    google: "21OceQzTF7Zd6aqViCj-Rr3kRRMCmPY0nfCTGCfeTcE",
   },
 };
 
