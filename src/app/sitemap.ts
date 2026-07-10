@@ -1,53 +1,30 @@
 import type { MetadataRoute } from "next";
 
-// ⚠️ Cambiar esta URL cuando tengas tu dominio de producción
-const SITE_URL = "https://cafelaelda.com";
-
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
+  const baseUrl = "https://cafe-la-elda.vercel.app";
 
-  return [
-    {
-      url: SITE_URL,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${SITE_URL}/#productos`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/#historia`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${SITE_URL}/#proceso`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${SITE_URL}/#combos`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${SITE_URL}/#origen`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${SITE_URL}/#contacto`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
+  const sections = [
+    { url: "/", priority: 1.0, changeFrequency: "weekly" as const },
+    { url: "/#historia", priority: 0.8, changeFrequency: "monthly" as const },
+    { url: "/#productos", priority: 0.9, changeFrequency: "weekly" as const },
+    { url: "/#combos", priority: 0.8, changeFrequency: "weekly" as const },
+    { url: "/#corporativos", priority: 0.8, changeFrequency: "monthly" as const },
+    { url: "/#origen", priority: 0.7, changeFrequency: "monthly" as const },
+    { url: "/#proceso", priority: 0.7, changeFrequency: "monthly" as const },
+    { url: "/#testimonios", priority: 0.6, changeFrequency: "monthly" as const },
+    { url: "/#aliados", priority: 0.6, changeFrequency: "monthly" as const },
+    { url: "/#contacto", priority: 0.9, changeFrequency: "monthly" as const },
+    { url: "/legal/terminos", priority: 0.3, changeFrequency: "yearly" as const },
+    { url: "/legal/privacidad", priority: 0.3, changeFrequency: "yearly" as const },
+    { url: "/legal/envios", priority: 0.4, changeFrequency: "yearly" as const },
   ];
+
+  const now = new Date();
+
+  return sections.map((section) => ({
+    url: `${baseUrl}${section.url}`,
+    lastModified: now,
+    changeFrequency: section.changeFrequency,
+    priority: section.priority,
+  }));
 }

@@ -1,10 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import {
   Playfair_Display,
   Cormorant_Garamond,
   Bebas_Neue,
   Josefin_Sans,
 } from "next/font/google";
+import { StructuredData } from "@/components/seo/StructuredData";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -36,16 +37,23 @@ const josefin = Josefin_Sans({
 });
 
 // ⚠️ Cambiar esta URL cuando tengas tu dominio de producción
-const SITE_URL = "https://cafelaelda.com";
+const SITE_URL = "https://cafe-la-elda.vercel.app";
+
+export const viewport: Viewport = {
+  themeColor: "#C8A24A",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Café La Elda 1941 — El Mejor Sabor Del Mundo",
+    default: "Café La Elda 1941 — El Mejor Sabor Del Mundo | Café Agroecológico de Risaralda",
     template: "%s | Café La Elda 1941",
   },
   description:
-    "Más de 4 años cultivando el mejor café del Eje Cafetero colombiano. Café agroecológico, tostado artesanalmente en Risaralda. Compra online con pago seguro.",
+    "Café agroecológico del Eje Cafetero colombiano desde 1941. Tostado artesanalmente en Dosquebradas, Risaralda. Café en grano, molido, derivados, combos y regalos corporativos. Compra online con pago seguro.",
   keywords: [
     "café de Colombia",
     "café agroecológico",
@@ -53,10 +61,20 @@ export const metadata: Metadata = {
     "café de Risaralda",
     "café tostado artesanal",
     "Café La Elda",
+    "café La Elda 1941",
     "comprar café online Colombia",
     "café especialidad",
-    "vino de café",
+    "café Dosquebradas",
+    "café Pereira Risaralda",
+    "café artesanal",
+    "panderositas de café",
+    "arequipe de café",
     "chocoffee",
+    "regalos corporativos café",
+    "café molido 250g",
+    "café en grano Colombia",
+    "café familiar",
+    "tienda de café online",
   ],
   authors: [{ name: "Café La Elda 1941" }],
   creator: "Café La Elda 1941",
@@ -69,23 +87,25 @@ export const metadata: Metadata = {
     locale: "es_CO",
     url: SITE_URL,
     siteName: "Café La Elda 1941",
-    title: "Café La Elda 1941 — El Mejor Sabor Del Mundo",
+    title: "Café La Elda 1941 — El Mejor Sabor Del Mundo | Café Agroecológico de Risaralda",
     description:
-      "Café agroecológico del Eje Cafetero colombiano. Tostado artesanalmente en Risaralda. Compra online con pago seguro.",
+      "Café agroecológico del Eje Cafetero colombiano desde 1941. Tostado artesanalmente en Dosquebradas, Risaralda. Compra online con pago seguro.",
     images: [
       {
         url: "/images/logo-cafe-la-elda.png",
         width: 400,
         height: 400,
-        alt: "Café La Elda 1941",
+        alt: "Logo Café La Elda 1941",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
+    site: "@laelda1941",
+    creator: "@laelda1941",
     title: "Café La Elda 1941 — El Mejor Sabor Del Mundo",
     description:
-      "Café agroecológico del Eje Cafetero colombiano. Tostado artesanalmente en Risaralda.",
+      "Café agroecológico del Eje Cafetero colombiano desde 1941. Tostado artesanalmente en Risaralda. Compra online.",
     images: ["/images/logo-cafe-la-elda.png"],
   },
   robots: {
@@ -103,7 +123,15 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/images/logo-cafe-la-elda.png",
   },
+  manifest: "/manifest.json",
   category: "food",
+  verification: {
+    google: "",
+  },
+  other: {
+    "google-site-verification": "",
+    "msvalidate.01": "",
+  },
 };
 
 export default function RootLayout({
@@ -116,7 +144,10 @@ export default function RootLayout({
       lang="es"
       className={`${playfair.variable} ${cormorant.variable} ${bebas.variable} ${josefin.variable} font-josefin`}
     >
-      <body>{children}</body>
+      <body>
+        <StructuredData />
+        {children}
+      </body>
     </html>
   );
 }

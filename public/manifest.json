@@ -1,0 +1,26 @@
+{
+  "name": "Café La Elda 1941",
+  "short_name": "La Elda",
+  "description": "El Mejor Sabor Del Mundo — Café agroecológico del Eje Cafetero colombiano",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0804",
+  "theme_color": "#C8A24A",
+  "orientation": "portrait-primary",
+  "lang": "es-CO",
+  "categories": ["food", "shopping", "lifestyle"],
+  "icons": [
+    {
+      "src": "/images/logo-cafe-la-elda.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo-cafe-la-elda.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
