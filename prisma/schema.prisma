@@ -7,6 +7,10 @@ datasource db {
   provider = "postgresql"
 }
 
+// ============================================================
+// MÓDULO E-COMMERCE (Existente - sin cambios)
+// ============================================================
+
 model Category {
   id        String    @id @default(cuid())
   name      String    @unique
@@ -32,8 +36,11 @@ model Product {
   featured    Boolean     @default(false)
   active      Boolean     @default(true)
   createdAt   DateTime    @default(now()) @map("created_at")
-  updatedAt   DateTime    @updatedAt @map("updated_at")
+  updatedAt   DateTime    @updatedAt      @map("updated_at")
   orderItems  OrderItem[]
+
+  // Relación con inventario
+  inventoryItems InventoryItem[]
 
   @@map("products")
 }
@@ -48,8 +55,12 @@ model Order {
   total         Int
   status        String      @default("PENDING")
   createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @updatedAt @map("updated_at")
+  updatedAt     DateTime    @updatedAt      @map("updated_at")
   items         OrderItem[]
+
+  // Relación con factura electrónica
+  invoiceId String?  @unique @map("invoice_id")
+  invoice   Invoice? @relation(fields: [invoiceId], references: [id])
 
   @@map("orders")
 }
@@ -79,4 +90,573 @@ model ContactMessage {
   @@map("contact_messages")
 }
 
+// ============================================================
+// MÓDULO: USUARIOS Y AUTENTICACIÓN
+// ============================================================
 
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  name          String
+  role          String    @default("VENDEDOR") // ADMIN, GERENTE, CONTADOR, VENDEDOR
+  active        Boolean   @default(true)
+  lastLogin     DateTime? @map("last_login")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt      @map("updated_at")
+
+  // Auditoría
+  auditLogs     AuditLog[]
+
+  @@map("users")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  action    String   // CREATE, UPDATE, DELETE, LOGIN, LOGOUT
+  module    String   // FACTURACION, CONTABILIDAD, INVENTARIO, NOMINA, etc.
+  entity    String   // Nombre de la tabla afectada
+  entityId  String?  @map("entity_id")
+  details   Json?    // Detalles del cambio (antes/después)
+  ipAddress String?  @map("ip_address")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([module])
+  @@map("audit_logs")
+}
+
+// ============================================================
+// MÓDULO: CONFIGURACIÓN DE EMPRESA
+// ============================================================
+
+model CompanySettings {
+  id                    String   @id @default(cuid())
+  // Datos de la empresa (Persona Natural)
+  legalName             String   @map("legal_name")          // Razón social
+  documentType          String   @default("CC")  @map("document_type") // CC, NIT, CE
+  documentNumber        String   @map("document_number")     // 24694411
+  verificationDigit     Int      @default(9)     @map("verification_digit") // 9
+  // Régimen tributario
+  taxRegime             String   @default("NO_RESPONSABLE")  @map("tax_regime") // NO_RESPONSABLE, RESPONSABLE_IVA, SIMPLE
+  icaRate               Float?   @default(0)     @map("ica_rate") // Tasa ReteICA
+  reteFuenteRate        Float?   @default(0)     @map("rete_fuente_rate")
+  // Dirección fiscal
+  address               String
+  city                  String   @default("Dosquebradas")
+  department            String   @default("Risaralda")
+  country               String   @default("CO")
+  postalCode            String?  @map("postal_code")
+  phone                 String
+  email                 String
+  // Configuración DIAN
+  dianEnvironment       String   @default("PRODUCCION") @map("dian_environment") // PRUEBAS, PRODUCCION
+  dianSoftwareId        String?  @map("dian_software_id")
+  dianPin               String?  @map("dian_pin")
+  technicalProviderKey  String?  @map("technical_provider_key") // MATIAS API key
+  // Resolución de facturación
+  resolutionNumber      String?  @map("resolution_number")
+  resolutionDate        DateTime? @map("resolution_date")
+  resolutionPrefix      String?  @map("resolution_prefix")
+  resolutionRangeStart  Int?     @map("resolution_range_start")
+  resolutionRangeEnd    Int?     @map("resolution_range_end")
+  // Configuración MATIAS API
+  matiasApiToken        String?  @map("matias_api_token")
+  matiasApiBaseUrl      String   @default("https://matias-api.com/api/v1") @map("matias_api_base_url")
+  // Branding
+  logo                  String?
+  primaryColor          String   @default("#1A0F08") @map("primary_color")
+  accentColor           String   @default("#C8A24A") @map("accent_color")
+  // Timestamps
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt      @map("updated_at")
+
+  @@map("company_settings")
+}
+
+// ============================================================
+// MÓDULO: TERCEROS (CLIENTES Y PROVEEDORES)
+// ============================================================
+
+model ThirdParty {
+  id              String   @id @default(cuid())
+  type            String   @default("CLIENTE") // CLIENTE, PROVEEDOR, EMPLEADO, AMBOS
+  // Identificación
+  documentType    String   @default("CC")      @map("document_type") // CC, NIT, CE, PA
+  documentNumber  String                        @map("document_number")
+  // Nombres
+  firstName       String?                      @map("first_name")     // Para persona natural
+  lastName        String?                      @map("last_name")
+  businessName    String?                      @map("business_name")  // Para empresa
+  fullName        String   @default("CLIENTE EVENTUAL") // Campo calculado/registrado
+  // Contacto
+  email           String?
+  phone           String?
+  whatsapp        String?
+  // Dirección
+  address         String?
+  city            String?
+  department      String?
+  country         String   @default("CO")
+  // Fiscal
+  taxRegime       String?  @map("tax_regime")
+  isResponsibleIva Boolean @default(false)     @map("is_responsible_va")
+  // CRM
+  segment         String?  // MINORISTA, MAYORISTA, CORPORATIVO
+  notes           String?
+  tags            String[] @default([])
+  // Estado
+  active          Boolean  @default(true)
+  // Saldo de cartera
+  balance         Int      @default(0) // Saldo pendiente en centavos
+  // Timestamps
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt      @map("updated_at")
+
+  // Relaciones
+  invoices        Invoice[]
+  invoicesAsProvider ProviderInvoice[]
+  employee        Employee?
+  stockMovements  StockMovement[]
+
+  @@unique([documentType, documentNumber])
+  @@index([type])
+  @@index([fullName])
+  @@map("third_parties")
+}
+
+// ============================================================
+// MÓDULO: FACTURACIÓN ELECTRÓNICA DIAN
+// ============================================================
+
+model Invoice {
+  id              String   @id @default(cuid())
+  // Numeración
+  prefix          String   @default("FE")   // FE, POS, DEE
+  number          Int                        // Número consecutivo
+  fullNumber      String   @unique           @map("full_number") // FE12345
+  // Tipo de documento
+  type            String   @default("FACTURA") // FACTURA, NOTA_CREDITO, NOTA_DEBITO
+  creditNoteOrigin String? @map("credit_note_origin") // Si es NC, referencia a factura original
+  // Cliente
+  customerId      String                      @map("customer_id")
+  customer        ThirdParty @relation(fields: [customerId], references: [id])
+  // Datos del cliente (snapshot al momento de la factura)
+  customerName    String                      @map("customer_name")
+  customerDocument String                     @map("customer_document")
+  customerEmail   String?                     @map("customer_email")
+  customerPhone   String?                     @map("customer_phone")
+  // Totales (en centavos de COP)
+  subtotal        Int       @default(0)
+  discount        Int       @default(0)       // Descuento total
+  iva             Int       @default(0)       // IVA total (0 para no responsables)
+  ica             Int       @default(0)       // ReteICA
+  reteFuente      Int       @default(0)       @map("rete_fuente")
+  total           Int       @default(0)       // Total a pagar
+  // Estado DIAN
+  status          String   @default("BORRADOR") // BORRADOR, ENVIADA, ACEPTADA, RECHAZADA, ANULADA
+  cufe            String?                    // Código Único de Factura Electrónica
+  qrCode          String?  @map("qr_code")   // URL del QR de validación DIAN
+  xmlContent      String?  @map("xml_content") // XML generado
+  pdfUrl          String?  @map("pdf_url")   // PDF generado
+  dianResponse    Json?    @map("dian_response") // Respuesta completa de la DIAN
+  errorMessage    String?  @map("error_message")
+  // Pago
+  paymentMethod   String   @default("EFECTIVO") @map("payment_method") // EFECTIVO, TARJETA, TRANSFERENCIA, ONLINE
+  paymentStatus   String   @default("PAGADA") @map("payment_status") // PENDIENTE, PAGADA, PARCIAL, VENCIDA
+  paymentDate     DateTime? @map("payment_date")
+  dueDate         DateTime? @map("due_date")
+  // Relación con pedido web
+  order           Order?
+  // Asiento contable
+  journalEntryId  String?  @map("journal_entry_id")
+  // Metadata
+  notes           String?
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt      @map("updated_at")
+
+  items           InvoiceItem[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  invoiceId   String  @map("invoice_id")
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  // Producto
+  productId   String? @map("product_id")
+  description String  // Descripción del item
+  quantity    Int
+  unitPrice   Int     @map("unit_price") // Precio unitario en centavos
+  discount    Int     @default(0)        // Descuento del item en centavos
+  ivaRate     Float   @default(0)        @map("iva_rate") // 0% para no responsable
+  ivaAmount   Int     @default(0)        @map("iva_amount")
+  total       Int                        // Total del item
+
+  @@index([invoiceId])
+  @@map("invoice_items")
+}
+
+// ============================================================
+// MÓDULO: FACTURAS DE PROVEEDORES (CUENTAS POR PAGAR)
+// ============================================================
+
+model ProviderInvoice {
+  id              String   @id @default(cuid())
+  // Proveedor
+  providerId      String   @map("provider_id")
+  provider        ThirdParty @relation(fields: [providerId], references: [id])
+  // Datos de la factura
+  invoiceNumber   String   @map("invoice_number")  // Número de factura del proveedor
+  cufe            String?                           // CUFE si es electrónica
+  invoiceDate     DateTime @map("invoice_date")
+  dueDate         DateTime? @map("due_date")
+  // Totales
+  subtotal        Int      @default(0)
+  iva             Int      @default(0)
+  total           Int      @default(0)
+  // Estado
+  status          String   @default("PENDIENTE") // PENDIENTE, PAGADA, PARCIAL, ANULADA
+  paymentDate     DateTime? @map("payment_date")
+  // Asiento contable
+  journalEntryId  String?  @map("journal_entry_id")
+  // Metadata
+  notes           String?
+  xmlContent      String?  @map("xml_content")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt      @map("updated_at")
+
+  @@index([providerId])
+  @@index([status])
+  @@map("provider_invoices")
+}
+
+// ============================================================
+// MÓDULO: CONTABILIDAD (PUC + NIIF)
+// ============================================================
+
+model Account {
+  id              String   @id @default(cuid())
+  code            String   @unique           // Código PUC (ej: 110505, 413505)
+  name            String                      // Nombre de la cuenta
+  type            String                      // ACTIVO, PASIVO, PATRIMONIO, INGRESO, GASTO, COSTO
+  class           Int                         // Clase PUC: 1-7
+  group           Int                         // Grupo PUC
+  subaccount      Int                         // Subcuenta PUC
+  // Naturaleza: DEBITO (normalmente Activo/Gasto) o CREDITO (Pasivo/Patrimonio/Ingreso)
+  nature          String   @default("DEBITO") // DEBITO, CREDITO
+  // NIIF
+  niifMapping     String?  @map("niif_mapping") // Mapeo a concepto NIIF
+  // Jerarquía
+  parentId        String?  @map("parent_id")
+  parent          Account? @relation("AccountHierarchy", fields: [parentId], references: [id])
+  children        Account[] @relation("AccountHierarchy")
+  // Configuración
+  isCash          Boolean  @default(false) @map("is_cash") // ¿Es cuenta de efectivo/banco?
+  isPaymentMethod Boolean  @default(false) @map("is_payment_method")
+  active          Boolean  @default(true)
+  // Saldos (para consultas rápidas - el detalle está en JournalEntryLine)
+  balance         Int      @default(0) // Saldo actual en centavos
+  // Centro de costo opcional
+  costCenter      String?  @map("cost_center")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt      @map("updated_at")
+
+  journalLines    JournalEntryLine[]
+  bankAccounts    BankAccount[]
+
+  @@index([type])
+  @@index([class])
+  @@map("accounts")
+}
+
+model JournalEntry {
+  id              String   @id @default(cuid())
+  // Numeración
+  number          Int                        // Consecutivo del comprobante
+  // Tipo de comprobante
+  type            String   @default("DIARIO") // DIARIO, INGRESO, EGRESO, VENTA, COMPRA, NOMINA, AJUSTE
+  // Descripción
+  description     String
+  reference       String?                    // Referencia (factura #, recibo #, etc.)
+  // Fecha
+  entryDate       DateTime @default(now()) @map("entry_date")
+  // Estado
+  status          String   @default("BORRADOR") // BORRADOR, POSTEADO, ANULADO
+  postedAt        DateTime? @map("posted_at")
+  // Totales (deben cuadrar)
+  totalDebit      Int      @default(0) @map("total_debit")
+  totalCredit     Int      @default(0) @map("total_credit")
+  // Origen automático
+  source          String   @default("MANUAL") // MANUAL, FACTURA, NOMINA, BANCO, INVENTARIO
+  sourceId        String?  @map("source_id") // ID del documento origen
+  // Timestamps
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt      @map("updated_at")
+
+  lines           JournalEntryLine[]
+
+  @@index([type])
+  @@index([entryDate])
+  @@index([status])
+  @@map("journal_entries")
+}
+
+model JournalEntryLine {
+  id              String   @id @default(cuid())
+  journalEntryId  String   @map("journal_entry_id")
+  journalEntry    JournalEntry @relation(fields: [journalEntryId], references: [id], onDelete: Cascade)
+  // Cuenta contable
+  accountId       String   @map("account_id")
+  account         Account  @relation(fields: [accountId], references: [id])
+  // Centro de costo
+  costCenter      String?  @map("cost_center")
+  // Tercero (opcional)
+  thirdPartyId    String?  @map("third_party_id")
+  // Valores (en centavos)
+  debit           Int      @default(0)  // Débito
+  credit          Int      @default(0)  // Crédito
+  // Descripción de la línea
+  description     String?
+  // Base imponible (para retenciones)
+  baseAmount      Int?     @map("base_amount")
+
+  @@index([journalEntryId])
+  @@index([accountId])
+  @@map("journal_entry_lines")
+}
+
+// ============================================================
+// MÓDULO: INVENTARIO MULTIBODEGA
+// ============================================================
+
+model Warehouse {
+  id          String   @id @default(cuid())
+  name        String   @unique               // Nombre de la bodega
+  code        String   @unique               // Código corto (BOD-1, PV-1)
+  address     String?
+  type        String   @default("PRINCIPAL") // PRINCIPAL, PUNTO_VENTA, PRODUCCION
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt      @map("updated_at")
+
+  inventoryItems InventoryItem[]
+  stockMovements StockMovement[]
+
+  @@map("warehouses")
+}
+
+model InventoryItem {
+  id           String   @id @default(cuid())
+  productId    String   @map("product_id")
+  product      Product  @relation(fields: [productId], references: [id])
+  warehouseId  String   @map("warehouse_id")
+  warehouse    Warehouse @relation(fields: [warehouseId], references: [id])
+  // Stock
+  quantity     Int      @default(0)           // Cantidad disponible
+  reserved     Int      @default(0)           // Cantidad reservada (pedidos pendientes)
+  minStock     Int      @default(5)           @map("min_stock") // Stock mínimo para alertas
+  maxStock     Int?                          @map("max_stock")
+  // Costo
+  unitCost     Int      @default(0)           @map("unit_cost") // Costo unitario en centavos
+  totalCost    Int      @default(0)           @map("total_cost") // Costo total = quantity * unitCost
+  // Trazabilidad
+  lotNumber    String?                       @map("lot_number")  // Número de lote
+  expiryDate   DateTime?                     @map("expiry_date") // Fecha de vencimiento
+  // Método de valorización
+  valuationMethod String @default("PROMEDIO") @map("valuation_method") // PEPS, UEPS, PROMEDIO
+  // Timestamps
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt      @map("updated_at")
+
+  @@unique([productId, warehouseId])
+  @@index([warehouseId])
+  @@map("inventory_items")
+}
+
+model StockMovement {
+  id            String   @id @default(cuid())
+  // Producto y bodega
+  productId     String   @map("product_id")
+  warehouseId   String   @map("warehouse_id")
+  warehouse     Warehouse @relation(fields: [warehouseId], references: [id])
+  thirdPartyId  String?  @map("third_party_id") // Proveedor o cliente relacionado
+  thirdParty    ThirdParty? @relation(fields: [thirdPartyId], references: [id])
+  // Tipo de movimiento
+  type          String   // ENTRADA, SALIDA, TRASLADO, AJUSTE, DEVOLUCION
+  // Cantidad (positiva para entradas, negativa para salidas)
+  quantity      Int
+  // Costo unitario al momento del movimiento
+  unitCost      Int      @map("unit_cost")
+  // Saldo después del movimiento (para kardex)
+  balanceQuantity Int    @map("balance_quantity")
+  balanceCost     Int    @map("balance_cost")
+  // Referencia del documento
+  reference     String?  // Número de factura, orden, etc.
+  referenceId   String?  @map("reference_id")
+  // Bodega destino (para traslados)
+  destinationWarehouseId String? @map("destination_warehouse_id")
+  // Asiento contable
+  journalEntryId String? @map("journal_entry_id")
+  // Notas
+  notes         String?
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([productId])
+  @@index([type])
+  @@index([createdAt])
+  @@map("stock_movements")
+}
+
+// ============================================================
+// MÓDULO: BANCOS Y TESORERÍA
+// ============================================================
+
+model BankAccount {
+  id           String   @id @default(cuid())
+  // Datos de la cuenta
+  bankName     String   @map("bank_name")       // Bancolombia, Bold, etc.
+  accountType  String   @map("account_type")    // AHORROS, CORRIENTE, VIRTUAL
+  accountNumber String  @unique @map("account_number")
+  // Cuenta contable asociada
+  accountId    String   @map("account_id")
+  account      Account  @relation(fields: [accountId], references: [id])
+  // Saldo
+  balance      Int      @default(0)             // Saldo en centavos
+  // Estado
+  active       Boolean  @default(true)
+  // Configuración Bold (pasarela)
+  boldApiKey   String?  @map("bold_api_key")
+  boldSecret   String?  @map("bold_secret")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt      @map("updated_at")
+
+  transactions BankTransaction[]
+
+  @@map("bank_accounts")
+}
+
+model BankTransaction {
+  id           String   @id @default(cuid())
+  bankAccountId String  @map("bank_account_id")
+  bankAccount  BankAccount @relation(fields: [bankAccountId], references: [id])
+  // Tipo
+  type         String   // INGRESO, EGRESO, TRANSFERENCIA, CONCILIACION
+  // Valores
+  amount       Int                                // Monto en centavos
+  // Descripción
+  description  String
+  reference    String?                            // Referencia bancaria
+  // Fecha
+  transactionDate DateTime @default(now()) @map("transaction_date")
+  // Estado de conciliación
+  status       String   @default("PENDIENTE")     // PENDIENTE, CONCILIADO, RECHAZADO
+  conciliatedAt DateTime? @map("conciliated_at")
+  // Relaciones
+  invoiceId    String?  @map("invoice_id")        // Factura relacionada
+  providerInvoiceId String? @map("provider_invoice_id")
+  // Asiento contable
+  journalEntryId String? @map("journal_entry_id")
+  // Metadata
+  notes        String?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([bankAccountId])
+  @@index([status])
+  @@index([transactionDate])
+  @@map("bank_transactions")
+}
+
+// ============================================================
+// MÓDULO: NÓMINA ELECTRÓNICA
+// ============================================================
+
+model Employee {
+  id              String   @id @default(cuid())
+  // Identificación
+  thirdPartyId    String   @unique @map("third_party_id")
+  thirdParty      ThirdParty @relation(fields: [thirdPartyId], references: [id])
+  // Datos laborales
+  position        String                           // Cargo
+  contractType    String   @default("TERMINO_INDEFINIDO") @map("contract_type")
+  startDate       DateTime @map("start_date")
+  endDate         DateTime? @map("end_date")
+  salary          Int                              // Salario base en centavos
+  // Periodo de pago
+  payFrequency    String   @default("QUINCENAL")   @map("pay_frequency") // SEMANAL, DECENAL, QUINCENAL, MENSUAL
+  // Seguridad social
+  eps             String                           // Entidad de salud
+  pensionFund     String   @map("pension_fund")    // Fondo de pensiones
+  arl             String                           // ARL
+  cajaCompensacion String? @map("caja_compensacion")
+  // Cesantías y compensación
+  severanceFund   String?  @map("severance_fund")  // Fondo de cesantías
+  // Banco para pago de nómina
+  bankAccount     String?  @map("bank_account")
+  bankAccountType String?  @map("bank_account_type")
+  // Estado
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt      @map("updated_at")
+
+  payroll         Payroll[]
+
+  @@map("employees")
+}
+
+model Payroll {
+  id              String   @id @default(cuid())
+  // Empleado
+  employeeId      String   @map("employee_id")
+  employee        Employee @relation(fields: [employeeId], references: [id])
+  // Periodo
+  period          String                           // Ej: 2025-07-QUINCENA-1
+  startDate       DateTime @map("start_date")
+  endDate         DateTime @map("end_date")
+  payDate         DateTime @map("pay_date")
+  // Devengados (en centavos)
+  baseSalary      Int      @default(0) @map("base_salary")
+  overtime        Int      @default(0)             // Horas extra
+  bonuses         Int      @default(0)             // Bonificaciones
+  commissions     Int      @default(0)             // Comisiones
+  auxiliaryTransport Int   @default(0)             @map("auxiliary_transport")
+  totalEarned     Int      @default(0) @map("total_earned") // Total devengado
+  // Deducciones (en centavos)
+  healthDeduction Int      @default(0) @map("health_deduction")    // 4% salud
+  pensionDeduction Int     @default(0) @map("pension_deduction")   // 4% pensión
+  solidarityWithholding Int @default(0) @map("solidarity_withholding") // Retención solidaria
+  loans           Int      @default(0)             // Libranzas
+  otherDeductions Int      @default(0) @map("other_deductions")
+  totalDeductions Int      @default(0) @map("total_deductions")
+  // Neto a pagar
+  netPay          Int      @default(0) @map("net_pay")
+  // Aportes patronales (empresa)
+  employerHealth  Int      @default(0) @map("employer_health")     // Aporte patronal salud (8.5%)
+  employerPension Int      @default(0) @map("employer_pension")    // Aporte patronal pensión (12%)
+  arl             Int      @default(0)               // ARL (depende del riesgo)
+  caja            Int      @default(0)               // Caja de compensación (4%)
+  icbf            Int      @default(0)               // ICBF (3%)
+  sena            Int      @default(0)               // SENA (2%)
+  totalEmployer   Int      @default(0) @map("total_employer") // Total aportes patronales
+  // Estado DIAN
+  status          String   @default("BORRADOR")     // BORRADOR, ENVIADA, ACEPTADA, RECHAZADA
+  dianCune        String?  @map("dian_cune")        // CUNE de nómina
+  xmlContent      String?  @map("xml_content")
+  dianResponse    Json?    @map("dian_response")
+  errorMessage    String?  @map("error_message")
+  // Asiento contable
+  journalEntryId  String?  @map("journal_entry_id")
+  // Timestamps
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt      @map("updated_at")
+
+  @@index([employeeId])
+  @@index([period])
+  @@map("payroll")
+}
